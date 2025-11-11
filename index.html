@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Degen Bar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFA500; /* Orange */
+            --secondary-color: #FFD700; /* Gold/Yellow */
+            --dark-background: #000000; /* Black */
+            --text-color: #e0e0e0; /* Off-white */
+            --glass-liquid-color: rgba(255, 165, 0, 0.6); /* Orange liquid */
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Chakra Petch', sans-serif;
+            --border-glow: #FFA500;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            color: var(--text-color);
+            background-color: var(--dark-background);
+            overflow: hidden; /* Prevent scroll on initial tilt */
+            transition: transform 0.3s ease-out, filter 0.3s ease-out;
+            background-image: url('bg.png'); /* Placeholder */
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Drunkenness effects - Smoother, less pixelated */
+        .intoxication-level-1 { transform: rotate(0.2deg); filter: blur(0.1px); }
+        .intoxication-level-2 { transform: rotate(-0.3deg); filter: blur(0.2px); }
+        .intoxication-level-3 { transform: rotate(0.5deg); filter: blur(0.3px); }
+        .intoxication-level-4 { transform: rotate(-0.7deg); filter: blur(0.4px); }
+        .intoxication-level-5 { transform: rotate(1deg); filter: blur(0.5px); animation: subtle-wobble 0.8s infinite alternate; }
+        .intoxication-level-6 { transform: rotate(-1.2deg); filter: blur(0.6px); animation: subtle-wobble 0.7s infinite alternate; }
+        .intoxication-level-7 { transform: rotate(1.5deg); filter: blur(0.8px); animation: subtle-wobble 0.6s infinite alternate; }
+        .intoxication-level-8 { transform: rotate(-1.8deg); filter: blur(1px); animation: subtle-wobble 0.5s infinite alternate; }
+        .intoxication-level-9 { transform: rotate(2deg); filter: blur(1.2px); animation: intense-wobble 0.4s infinite alternate; }
+        .intoxication-level-10 { transform: rotate(2.5deg) scale(1.01); filter: blur(1.5px) brightness(0.9) contrast(1.1); animation: intense-wobble 0.3s infinite alternate; }
+
+        @keyframes subtle-wobble {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(1px, 0.5px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes intense-wobble {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(2px, 1px) rotate(0.1deg); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            /* No pixelated rendering */
+        }
+
+        .title-container {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .title {
+            font-family: var(--font-heading);
+            font-size: 6em;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(255,165,0,0.8), 0 0 25px rgba(255,165,0,0.5);
+            margin: 0;
+            line-height: 1;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            font-family: var(--font-body);
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .twitter-link {
+            font-size: 0.9em;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0.8;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .twitter-link:hover {
+            opacity: 1;
+        }
+
+        .twitter-link img {
+            width: 22px;
+            height: 22px;
+            filter: invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        .connect-wallet-btn {
+            background-color: var(--primary-color);
+            color: var(--dark-background);
+            border: none;
+            padding: 12px 25px;
+            font-family: var(--font-heading);
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--primary-color);
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .connect-wallet-btn:hover {
+            box-shadow: 0 0 18px var(--primary-color), 0 0 30px rgba(255,165,0,0.6);
+            transform: scale(1.05);
+        }
+
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 20px 40px;
+            gap: 40px;
+            align-items: flex-start;
+            position: relative;
+            z-index: 5;
+        }
+
+.bar-chat-panel, .bar-tab-panel {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 12px rgba(255,165,0,0.5);
+            padding: 20px;
+            width: 300px;
+            flex-shrink: 0;
+            font-size: 0.85em;
+            height: 550px; /* This fixed height is important for flex-grow on chat-feed */
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            /* REMOVE THIS LINE: overflow: hidden; */
+        }
+
+
+
+        .panel-title {
+            font-family: var(--font-heading);
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            text-shadow: 0 0 8px rgba(255,215,0,0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #chat-feed {
+            flex-grow: 1;
+            overflow-y: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-right: 5px; /* Prevent text from touching scrollbar area */
+        }
+        #chat-feed::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            line-height: 1.4;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .chat-message.system {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .chat-message.user {
+            color: var(--text-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-drink-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .glass-container {
+            position: relative;
+            width: 280px; /* Adjust size */
+            height: 350px; /* Adjust size */
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .glass-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255,165,0,0.5));
+        }
+
+        .drink-fill {
+            position: absolute;
+            bottom: 0;
+            width: 70%; /* Adjust to fit inside the glass */
+            height: 0%;
+            background-color: var(--glass-liquid-color);
+            border-radius: 0 0 60px 60px; /* Rounded bottom */
+            transition: height 0.7s ease-out;
+            transform-origin: bottom;
+            filter: drop-shadow(0 0 10px rgba(255,165,0,0.7));
+            z-index: -1;
+        }
+
+        .drink-button {
+            background-color: var(--primary-color);
+            color: var(--dark-background);
+            border: none;
+            padding: 18px 50px;
+            font-family: var(--font-heading);
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--primary-color), 0 0 35px rgba(255,165,0,0.7);
+            transition: all 0.2s ease-in-out;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
+        .drink-button:hover {
+            box-shadow: 0 0 25px var(--primary-color), 0 0 45px rgba(255,165,0,0.8);
+            transform: scale(1.03);
+        }
+
+        #system-message {
+            margin-top: 25px;
+            color: var(--primary-color);
+            font-family: var(--font-body);
+            font-size: 1em;
+            height: 30px;
+            font-weight: bold;
+        }
+
+        .stats-item {
+            margin-bottom: 12px;
+            font-size: 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stats-item span {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        .stats-item:last-child {
+            margin-bottom: 0;
+        }
+
+
+        #pay-tab-btn {
+            background-color: var(--secondary-color);
+            color: var(--dark-background);
+            border: none;
+            padding: 12px 20px;
+            font-family: var(--font-heading);
+            font-size: 0.9em;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--secondary-color);
+            transition: all 0.2s ease-in-out;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        #pay-tab-btn:hover {
+            box-shadow: 0 0 18px var(--secondary-color), 0 0 30px rgba(255,215,0,0.6);
+            transform: scale(1.05);
+        }
+
+        .how-it-works-section {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 12px rgba(255,165,0,0.5);
+            padding: 20px;
+            margin: 20px 40px;
+            font-size: 0.9em;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            border-radius: 5px;
+        }
+
+        .how-it-works-section h3 {
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .how-it-works-section p {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .contract-link {
+            color: var(--secondary-color);
+            text-decoration: underline;
+            margin-top: 15px;
+            display: inline-block; /* Use inline-block for better spacing */
+            font-weight: bold;
+            transition: color 0.2s ease-in-out;
+        }
+        .contract-link:hover {
+            color: var(--primary-color);
+        }
+
+
+        .community-intoxication {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 12px rgba(255,165,0,0.5);
+            padding: 15px 25px;
+            margin: 0 40px 20px 40px;
+            text-align: center;
+            font-size: 1.1em;
+            font-family: var(--font-heading);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            z-index: 5;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        .community-intoxication-bar {
+            flex-grow: 1;
+            height: 18px;
+            background-color: #333;
+            border: 1px solid var(--primary-color);
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .community-intoxication-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 8px var(--primary-color);
+        }
+
+        /* Blackout specific styles */
+        .blackout {
+            filter: grayscale(80%) brightness(0.2) contrast(1.5);
+            transition: filter 0.8s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="a.png" alt="The Degen Bar Logo" class="logo">
+        </div>
+        <div class="title-container">
+            <h1 class="title">THE DEGEN BAR</h1>
+            <p class="subtitle">Every sip brings you closer to liquidation.</p>
+        </div>
+        <div class="header-right">
+            <a href="https://x.com/TheDegenBar" target="_blank" class="twitter-link">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Twitter_icon.svg/1200px-Twitter_icon.svg.png" alt="Twitter"> @TheDegenBar
+            </a>
+            <button class="connect-wallet-btn" id="connectWalletBtn">CONNECT SOLANA WALLET</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="bar-chat-panel">
+            <h3 class="panel-title">THE BAR CHAT</h3>
+            <div id="chat-feed">
+                <!-- Chat messages will be dynamically added here -->
+                <div class="chat-message system">[SYSTEM] New customer entered the bar.</div>
+                <div class="chat-message user">sad2...Ds2v: Another round, barkeep!</div>
+                <div class="chat-message user">s8B1...D41C: My bags are heavy, but my spirit is light!</div>
+            </div>
+        </div>
+
+        <div class="main-drink-area">
+            <div class="glass-container">
+                <img src="a.png" alt="Drinking Glass" class="glass-image">
+                <div class="drink-fill" id="drinkFill"></div>
+            </div>
+            <button class="drink-button" id="drinkButton">DRINK</button>
+            <p id="system-message">[SYSTEM] Ready for your first taste, degen?</p>
+        </div>
+
+        <div class="bar-tab-panel">
+            <h3 class="panel-title">BAR TAB / STATS</h3>
+            <div class="stats-item"><span>DRINKS CONSUMED:</span> <span id="drinksConsumed">0</span></div>
+            <div class="stats-item"><span>CURRENT TAB:</span> <span id="currentTab">0.00 SOL</span></div>
+            <div class="stats-item"><span>INTOXICATION LEVEL:</span> <span id="intoxicationLevel">0</span>%</div>
+            <button id="pay-tab-btn">PAY TAB</button>
+        </div>
+    </div>
+
+    <div class="how-it-works-section">
+        <h3>HOW IT WORKS</h3>
+        <p>Welcome to The Degen Bar. Buy virtual drinks using your Solana wallet. Each drink contributes to the shared intoxication meter. The more everyone drinks, the more the bar — and your screen — begins to lose balance. When the bar hits blackout level, the room resets.</p>
+        <a href="#" class="contract-link">View Bar Contract (Placeholder)</a>
+    </div>
+
+    <div class="community-intoxication">
+        <span>COMMUNITY INTOXICATION: <span id="communityIntoxicationText">0</span>%</span>
+        <div class="community-intoxication-bar">
+            <div class="community-intoxication-fill" id="communityIntoxicationFill"></div>
+        </div>
+    </div>
+
+    <script>
+        const drinkButton = document.getElementById('drinkButton');
+        const drinkFill = document.getElementById('drinkFill');
+        const systemMessage = document.getElementById('system-message');
+        const drinksConsumedSpan = document.getElementById('drinksConsumed');
+        const currentTabSpan = document.getElementById('currentTab');
+        const intoxicationLevelSpan = document.getElementById('intoxicationLevel');
+        const payTabBtn = document.getElementById('pay-tab-btn');
+        const chatFeed = document.getElementById('chat-feed');
+        const body = document.body;
+        const communityIntoxicationText = document.getElementById('communityIntoxicationText');
+        const communityIntoxicationFill = document.getElementById('communityIntoxicationFill');
+        const connectWalletBtn = document.getElementById('connectWalletBtn'); // Get the button reference
+
+        let drinksConsumed = 0;
+        let intoxicationLevel = 0;
+        let currentTab = 0;
+        const DRINK_COST = 0.03; // Simulated SOL cost per drink
+        const MAX_INTOXICATION = 100;
+        const BLACKOUT_DRINK_COUNT = 10;
+        let isBlackedOut = false;
+        let blackoutTimeout;
+
+        // --- Wallet Connection (Placeholder) ---
+        connectWalletBtn.addEventListener('click', () => {
+            alert('Connecting to Solana wallet... (Demo placeholder)');
+            // In a real app, this would initiate Solana wallet adapter
+            // Example for Solana:
+            // if (window.solana && window.solana.isPhantom) {
+            //     try {
+            //         const resp = await window.solana.connect();
+            //         console.log(resp.publicKey.toString());
+            //         connectWalletBtn.textContent = `Connected: ${resp.publicKey.toString().substring(0, 4)}...${resp.publicKey.toString().slice(-4)}`;
+            //     } catch (err) {
+            //         console.error(err);
+            //     }
+            // } else {
+            //     alert('Phantom wallet not found! Please install it.');
+            // }
+        });
+
+        // --- Drink Mechanic ---
+        drinkButton.addEventListener('click', () => {
+            if (isBlackedOut) {
+                systemMessage.textContent = "[SYSTEM] You're still blacked out! Wait for recovery.";
+                return;
+            }
+
+            drinksConsumed++;
+            currentTab += DRINK_COST;
+            intoxicationLevel = Math.min(MAX_INTOXICATION, intoxicationLevel + (MAX_INTOXICATION / BLACKOUT_DRINK_COUNT));
+
+            updateStats();
+            applyDrunkennessEffects();
+            updateDrinkFill();
+            addSystemMessageForDrink();
+            addSimulatedChatMessage(`0x${Math.random().toString(16).substring(2, 5)}...: another round!`, 'user');
+
+            if (drinksConsumed >= BLACKOUT_DRINK_COUNT && !isBlackedOut) {
+                triggerBlackout();
+            }
+        });
+
+        function updateStats() {
+            drinksConsumedSpan.textContent = drinksConsumed;
+            currentTabSpan.textContent = currentTab.toFixed(2) + " SOL"; // Added SOL
+            intoxicationLevelSpan.textContent = Math.round(intoxicationLevel);
+
+            // Update community intoxication for visual demo (local only)
+            // In a real app, this would be fetched from a shared state
+            let simulatedCommunityIntoxication = Math.min(100, Math.round(intoxicationLevel * 0.7 + Math.random() * 30));
+            communityIntoxicationText.textContent = simulatedCommunityIntoxication;
+            communityIntoxicationFill.style.width = `${simulatedCommunityIntoxication}%`;
+        }
+
+        function updateDrinkFill() {
+            const fillHeight = (intoxicationLevel / MAX_INTOXICATION);
+            drinkFill.style.height = `${fillHeight * 70}%`; // Adjusted multiplier
+            drinkFill.style.opacity = `${0.6 + fillHeight * 0.4}`; // More opaque when full
+        }
+
+        function addSystemMessageForDrink() {
+            const messages = [
+                "[SYSTEM] You ordered your first drink.",
+                "[SYSTEM] The floor tilts slightly.",
+                "[SYSTEM] The room is starting to sway.",
+                "[SYSTEM] Your vision blurs a bit, degen.",
+                "[SYSTEM] Everything is wobbling now.",
+                "[SYSTEM] The bar chat is drifting...",
+                "[SYSTEM] Are those pixels melting? (Oops, not pixelated anymore!)", // Updated message
+                "[SYSTEM] You should probably stop...",
+                "[SYSTEM] This is getting intense!",
+                "[SYSTEM] Brace for impact!"
+            ];
+            const msgIndex = Math.min(drinksConsumed - 1, messages.length - 1);
+            systemMessage.textContent = messages[msgIndex];
+            addSimulatedChatMessage(messages[msgIndex], 'system');
+        }
+
+        function applyDrunkennessEffects() {
+            body.className = ''; // Clear previous effects
+            if (intoxicationLevel > 0) {
+                const levelClass = Math.ceil(intoxicationLevel / (MAX_INTOXICATION / BLACKOUT_DRINK_COUNT));
+                body.classList.add(`intoxication-level-${Math.min(levelClass, BLACKOUT_DRINK_COUNT)}`);
+            }
+        }
+
+        function triggerBlackout() {
+            isBlackedOut = true;
+            systemMessage.textContent = "[SYSTEM] You blacked out. Site will recover in 30s.";
+            addSimulatedChatMessage("[SYSTEM] A collective blackout! The bar resets...", 'system');
+            body.classList.add('blackout'); // Apply global blackout filter
+            drinkButton.disabled = true;
+
+            let blackoutRecoveryTime = 30; // seconds
+            blackoutTimeout = setInterval(() => {
+                blackoutRecoveryTime--;
+                systemMessage.textContent = `[SYSTEM] You blacked out. Site will recover in ${blackoutRecoveryTime}s.`;
+                if (blackoutRecoveryTime <= 0) {
+                    clearInterval(blackoutTimeout);
+                    resetBar();
+                }
+            }, 1000);
+        }
+
+        function resetBar() {
+            drinksConsumed = 0;
+            intoxicationLevel = 0;
+            currentTab = 0;
+            isBlackedOut = false;
+            body.className = ''; // Remove all intoxication classes
+            body.classList.remove('blackout'); // Remove blackout filter
+            drinkFill.style.height = '0%';
+            drinkFill.style.opacity = '0.6';
+            systemMessage.textContent = "[SYSTEM] Welcome back, degen! Ready for another round?";
+            drinkButton.disabled = false;
+            updateStats();
+            addSimulatedChatMessage("[SYSTEM] The bar has reset. New session!", 'system');
+        }
+
+        // --- Pay Tab (Placeholder) ---
+        payTabBtn.addEventListener('click', () => {
+            if (currentTab > 0) {
+                alert(`Paying ${currentTab.toFixed(2)} SOL. (Simulated transaction)`);
+                addSimulatedChatMessage(`[SYSTEM] 0x${Math.random().toString(16).substring(2, 5)}... paid their tab!`, 'system');
+                currentTab = 0; // Reset tab after payment
+                updateStats();
+            } else {
+                alert('Your tab is empty, degen!');
+            }
+        });
+
+        // --- Bar Chat Simulation ---
+        const userChatMessages = [
+            "another round!",
+            "i can’t feel my bags",
+            "wen moon?",
+            "this feels so bearish...",
+            "my wife just left me for a whale",
+            "just aped into a new shitcoin, wish me luck",
+            "any alpha in here?",
+            "liquidation party!",
+            "send it",
+            "i'm down bad",
+            "lfg degen!",
+            "just bought the dip for the 10th time today"
+        ];
+
+        const systemChatMessages = [
+            "new customer joined the bar",
+            "a large order just came in",
+            "the bar is getting louder",
+            "the lights are flickering",
+            "rumors of a pump circulating",
+            "the bartender is pouring another round"
+        ];
+
+        function addSimulatedChatMessage(message, type) {
+            const chatMessageDiv = document.createElement('div');
+            chatMessageDiv.classList.add('chat-message', type);
+            chatMessageDiv.textContent = message;
+            chatFeed.appendChild(chatMessageDiv);
+            chatFeed.scrollTop = chatFeed.scrollHeight; // Auto-scroll to bottom
+        }
+
+        function simulateChatUpdate() {
+            // Increase chaos with intoxication
+            let messageChance = 0.5 + (intoxicationLevel / MAX_INTOXICATION) * 0.5;
+            if (Math.random() < messageChance) {
+                const isUserMessage = Math.random() > 0.3; // More user messages
+                let message;
+                if (isUserMessage) {
+                    const randomUser = `0x${Math.random().toString(16).substring(2, 8)}...${Math.random().toString(16).substring(2, 6)}`;
+                    message = `${randomUser}: ${userChatMessages[Math.floor(Math.random() * userChatMessages.length)]}`;
+                    addSimulatedChatMessage(message, 'user');
+                } else {
+                    message = systemChatMessages[Math.floor(Math.random() * systemChatMessages.length)];
+                    addSimulatedChatMessage(`[SYSTEM] ${message}`, 'system');
+                }
+            }
+        }
+
+        setInterval(simulateChatUpdate, 3000); // Update chat every 3 seconds
+
+        // Initial setup
+        updateStats();
+        updateDrinkFill();
+    </script>
+</body>
+</html>
